@@ -9,7 +9,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 2s linear;
   }
 }
 
@@ -37,26 +37,3 @@
   }
 }
 
-.spin-symbol {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.spin {
-  animation: spin 1s infinite linear;
-}
-
-.symbol {
-  display: inline-block;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.App-logo {
-  animation: spin 3s infinite linear;
-}
