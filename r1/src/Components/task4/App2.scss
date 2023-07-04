@@ -1,0 +1,25 @@
+.square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.plus-button {
+  background-color: #222;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.count {
+  font-size: 24px;
+}
