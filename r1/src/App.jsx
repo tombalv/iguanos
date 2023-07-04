@@ -1,8 +1,8 @@
 import "./App.scss";
-import "./buttons.scss";
+
 // import Counter from "./Components/005/Counter";
 // import Sq from "./Components/005/Sq";
-import Task3 from "./Components/task4/Task3";
+import Bank from "./Components/U1/App";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <h1>Hello Props</h1>
         {/* <Counter count />
         <Sq /> */}
-        <Task3 />
+        <Bank />
       </header>
     </div>
   );
