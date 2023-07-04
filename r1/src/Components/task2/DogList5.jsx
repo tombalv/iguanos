@@ -1,5 +1,3 @@
-import React from "react";
-
 const DogList5 = ({ dogs }) => {
   return (
     <div>
