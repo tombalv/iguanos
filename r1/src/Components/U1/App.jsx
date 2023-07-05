@@ -42,24 +42,9 @@ const Bank = () => {
     setLastName("");
   };
 
-  // const deleteAccount = (id, amount) => {
-  //   if (amount < 0) {
-  //     alert("Sąskaitos negalima ištrinti, kol joje yra minusinė suma.");
-  //   } else if (amount === 0) {
-  //     const confirmDelete = window.confirm(
-  //       "Ar tikrai norite ištrinti sąskaitą?"
-  //     );
-  //     if (confirmDelete) {
-  //       const updatedAccounts = accounts.filter((account) => account.id !== id);
-  //       setAccounts(updatedAccounts);
-  //     }
-  //   } else {
-  //     alert("Sąskaitos negalima ištrinti, kol joje yra lėšų.");
-  //   }
-  // };
   const deleteAccount = (id, amount) => {
-    if (amount !== 0) {
-      alert("Sąskaitos negalima ištrinti, kol joje yra lėšų.");
+    if (amount < 0) {
+      alert("Sąskaitos negalima ištrinti, kol joje yra minusinė suma.");
     } else if (amount === 0) {
       const confirmDelete = window.confirm(
         "Ar tikrai norite ištrinti sąskaitą?"
@@ -68,8 +53,30 @@ const Bank = () => {
         const updatedAccounts = accounts.filter((account) => account.id !== id);
         setAccounts(updatedAccounts);
       }
+    } else {
+      alert("Sąskaitos negalima ištrinti, kol joje yra lėšų.");
     }
   };
+  // const deleteAccount = (id, amount) => {
+  //   console.log(amount);
+  //   if (amount === 0) {
+  //     const confirmDelete = window.confirm(
+  //       "Ar tikrai norite ištrinti sąskaitą?"
+  //     );
+  //     if (confirmDelete) {
+  //       const updatedAccounts = accounts.filter((account) => account.id !== id);
+  //       setAccounts(updatedAccounts);
+  //     }
+  //     return;
+  //   }
+
+  //   if (amount < 0) {
+  //     alert("Sąskaitos negalima ištrinti, kol joje yra minusinė suma.");
+  //     return;
+  //   }
+
+  //   alert("Sąskaitos negalima ištrinti, kol joje yra lėšų.");
+  // };
 
   const depositFunds = (id) => {
     const updatedAccounts = accounts.map((account) => {
@@ -143,7 +150,9 @@ const Bank = () => {
               <td>{account.amount}</td>
 
               <td>
-                <button onClick={() => deleteAccount(account.id)}>
+                <button
+                  onClick={() => deleteAccount(account.id, account.amount)}
+                >
                   Ištrinti
                 </button>
                 <button onClick={() => depositFunds(account.id)}>
