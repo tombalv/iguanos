@@ -3,9 +3,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.scss";
 import "./buttons.scss";
 import { get, store } from "./Functions/localStorage";
-// import Delete from "./Components/006/jb/Delete";
+import Delete from "./Components/jb/Delete";
+import Edit from "./Components/jb/Edit";
 
-const KEY = "persons";
+export const KEY = "persons";
 
 function App() {
   const [name, setName] = useState("");
@@ -13,6 +14,9 @@ function App() {
   const [sn, setSn] = useState("");
   const [persons, setPersons] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(Date.now());
+
+  const [deleteData, setDeleteData] = useState(null);
+  const [editData, setEditData] = useState(null);
 
   const handleCreate = (_) => {
     const person = {
@@ -148,12 +152,18 @@ function App() {
                           <td>{person.age}</td>
                           <td>{person.sn}</td>
                           <td>
-                            <button className="nice green small no">
+                            <button
+                              className="nice green small no"
+                              onClick={(_) => setEditData(person)}
+                            >
                               Edit
                             </button>
                           </td>
                           <td>
-                            <button className="nice red small no">
+                            <button
+                              className="nice red small no"
+                              onClick={(_) => setDeleteData(person)}
+                            >
                               Delete
                             </button>
                           </td>
@@ -166,7 +176,20 @@ function App() {
           </div>
         </div>
       </div>
-      {/* <Delete /> */}
+      {deleteData && (
+        <Delete
+          setDeleteData={setDeleteData}
+          deleteData={deleteData}
+          setLastUpdate={setLastUpdate}
+        />
+      )}
+      {editData && (
+        <Edit
+          setEditData={setEditData}
+          editData={editData}
+          setLastUpdate={setLastUpdate}
+        />
+      )}
     </>
   );
 }
