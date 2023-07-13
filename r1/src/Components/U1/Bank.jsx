@@ -12,35 +12,59 @@
 // Sąskaitas saraše rūšiuoti pagal savininko pavardę.
 // Duomenų bazė - LocalStorage.
 
-import React, { useState, useEffect } from "react";
+import React, { useReducer, useEffect } from "react";
 import "./Bank.scss";
+import { debounce } from "lodash";
+
+const initialState = {
+  accounts: JSON.parse(localStorage.getItem("accounts")) || [],
+  firstName: "",
+  lastName: "",
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "setFirstName":
+      return { ...state, firstName: action.payload };
+    case "setLastName":
+      return { ...state, lastName: action.payload };
+    case "addAccount":
+      return {
+        ...state,
+        firstName: "",
+        lastName: "",
+        accounts: [
+          ...state.accounts,
+          {
+            id: Date.now(),
+            firstName: state.firstName,
+            lastName: state.lastName,
+            amount: 0,
+          },
+        ],
+      };
+    case "updateAccounts":
+      return { ...state, accounts: action.payload };
+    default:
+      return state;
+  }
+};
 
 const Bank = () => {
-  const [accounts, setAccounts] = useState([]);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { accounts, firstName, lastName } = state;
 
   useEffect(() => {
-    const storedAccounts = localStorage.getItem("accounts");
-    if (storedAccounts) {
-      setAccounts(JSON.parse(storedAccounts));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("accounts", JSON.stringify(accounts));
+    const debouncedSave = debounce(
+      () => localStorage.setItem("accounts", JSON.stringify(accounts)),
+      1000
+    );
+    debouncedSave();
+    return debouncedSave.cancel;
   }, [accounts]);
 
   const addAccount = () => {
-    const newAccount = {
-      id: Date.now(),
-      firstName,
-      lastName,
-      amount: 0,
-    };
-    setAccounts([...accounts, newAccount]);
-    setFirstName("");
-    setLastName("");
+    dispatch({ type: "addAccount" });
   };
 
   const deleteAccount = (id, amount) => {
@@ -52,7 +76,7 @@ const Bank = () => {
       );
       if (confirmDelete) {
         const updatedAccounts = accounts.filter((account) => account.id !== id);
-        setAccounts(updatedAccounts);
+        dispatch({ type: "updateAccounts", payload: updatedAccounts });
       }
     } else {
       alert("Sąskaitos negalima ištrinti, kol joje yra lėšų.");
@@ -60,21 +84,19 @@ const Bank = () => {
   };
 
   const depositFunds = (id) => {
-    const updatedAccounts = accounts.map((account) => {
-      if (account.id === id) {
-        const amount = parseFloat(
-          prompt("Įveskite sumą, kurią norite pridėti:")
-        );
-        if (!isNaN(amount) && amount > 0) {
+    const amount = parseFloat(prompt("Įveskite sumą, kurią norite pridėti:"));
+    if (!isNaN(amount) && amount > 0) {
+      const updatedAccounts = accounts.map((account) => {
+        if (account.id === id) {
           return {
             ...account,
             amount: account.amount + amount,
           };
         }
-      }
-      return account;
-    });
-    setAccounts(updatedAccounts);
+        return account;
+      });
+      dispatch({ type: "updateAccounts", payload: updatedAccounts });
+    }
   };
 
   const withdrawFunds = (id, currentAmount) => {
@@ -92,7 +114,7 @@ const Bank = () => {
         }
         return account;
       });
-      setAccounts(updatedAccounts);
+      dispatch({ type: "updateAccounts", payload: updatedAccounts });
     }
   };
 
@@ -104,14 +126,18 @@ const Bank = () => {
           type="text"
           placeholder="Vardas"
           value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
+          onChange={(e) =>
+            dispatch({ type: "setFirstName", payload: e.target.value })
+          }
           className="inputField"
         />
         <input
           type="text"
           placeholder="Pavardė"
           value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
+          onChange={(e) =>
+            dispatch({ type: "setLastName", payload: e.target.value })
+          }
           className="inputField"
         />
         <button onClick={addAccount} className="button">
