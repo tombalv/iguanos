@@ -13,6 +13,7 @@
 // Duomenų bazė - LocalStorage.
 
 import React, { useState, useEffect } from "react";
+import "./Bank.scss";
 
 const Bank = () => {
   const [accounts, setAccounts] = useState([]);
@@ -57,26 +58,6 @@ const Bank = () => {
       alert("Sąskaitos negalima ištrinti, kol joje yra lėšų.");
     }
   };
-  // const deleteAccount = (id, amount) => {
-  //   console.log(amount);
-  //   if (amount === 0) {
-  //     const confirmDelete = window.confirm(
-  //       "Ar tikrai norite ištrinti sąskaitą?"
-  //     );
-  //     if (confirmDelete) {
-  //       const updatedAccounts = accounts.filter((account) => account.id !== id);
-  //       setAccounts(updatedAccounts);
-  //     }
-  //     return;
-  //   }
-
-  //   if (amount < 0) {
-  //     alert("Sąskaitos negalima ištrinti, kol joje yra minusinė suma.");
-  //     return;
-  //   }
-
-  //   alert("Sąskaitos negalima ištrinti, kol joje yra lėšų.");
-  // };
 
   const depositFunds = (id) => {
     const updatedAccounts = accounts.map((account) => {
@@ -116,30 +97,34 @@ const Bank = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Sąskaitų sąrašas</h1>
-      <div>
+      <div className="inputContainer">
         <input
           type="text"
           placeholder="Vardas"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          className="inputField"
         />
         <input
           type="text"
           placeholder="Pavardė"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+          className="inputField"
         />
-        <button onClick={addAccount}>Sukurti sąskaitą</button>
+        <button onClick={addAccount} className="button">
+          Sukurti sąskaitą
+        </button>
       </div>
-      <table>
+      <table className="table">
         <thead>
           <tr>
             <th>Vardas</th>
             <th>Pavardė</th>
-            <th>Sąskaitos suma</th>
-            <th>Veiksmai</th>
+            <th className="sumColumn">Sąskaitos suma</th>
+            <th className="actionsColumn">Veiksmai</th>
           </tr>
         </thead>
         <tbody>
@@ -148,23 +133,25 @@ const Bank = () => {
               <td>{account.firstName}</td>
               <td>{account.lastName}</td>
               <td>{account.amount}</td>
-
               <td>
                 <button
+                  onClick={() => depositFunds(account.id)}
+                  className="button"
+                >
+                  Pridėti lėšų
+                </button>
+                <button
+                  onClick={() => withdrawFunds(account.id, account.amount)}
+                  className="button orange"
+                >
+                  Nuskaičiuoti lėšas
+                </button>
+                <button
                   onClick={() => deleteAccount(account.id, account.amount)}
+                  className="button red"
                 >
                   Ištrinti
                 </button>
-                <button onClick={() => depositFunds(account.id)}>
-                  Pridėti lėšų
-                </button>
-                <td>
-                  <button
-                    onClick={() => withdrawFunds(account.id, account.amount)}
-                  >
-                    Nuskaičiuoti lėšas
-                  </button>
-                </td>
               </td>
             </tr>
           ))}
